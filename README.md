@@ -33,7 +33,7 @@ This is a simple React-based quiz application that displays multiple-choice ques
 
 1. **Clone the repository**:
     ```sh
-    git clone https://github.com/your-username/react-quiz-app.git
+    git clone https://github.com/kereajay/Reactquizremct
     ```
 
 2. **Navigate to the project directory**:
@@ -52,7 +52,7 @@ This is a simple React-based quiz application that displays multiple-choice ques
     ```
 
 5. **Open the application**:
-    Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+    Open [https://reactquizremct.vercel.app/](https://reactquizremct.vercel.app/) to view it in the browser.
 
 ## Code Explanation
 
