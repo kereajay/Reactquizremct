@@ -1,19 +1,19 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import { data } from './Data';
 
 function Quiz() {
-    const wrong = []
-    const optionRefs = useRef({});
     const [currentQuestion, setCurrentQuestion] = useState(0);
-    const [clickedOption, setClickedOption] = useState(null);
     const [score, setScore] = useState(0);
     const [showColors, setShowColors] = useState(false);
-    const [wrongquestion, setWrongquestion] = useState([])
-    const [displaywrongquestion, setDisplaywrongquestion] = useState(false)
+    const [wrongquestion, setWrongquestion] = useState([]);
+    const [displaywrongquestion, setDisplaywrongquestion] = useState(false);
+    const [clickedOption, setClickedOption] = useState(null);
 
-    const handleQuestionChange = () => {
-        if (clickedOption !== null) {
-            updateScore();
+    const handleQuestionChange = (index) => {
+        const selectedOption = index + 1;
+        setClickedOption(selectedOption);
+        if (selectedOption !== 0) {
+            updateScore(selectedOption);
             setShowColors(true);
 
             setTimeout(() => {
@@ -23,42 +23,32 @@ function Quiz() {
                 if (currentQuestion < data.length - 1) {
                     setCurrentQuestion(currentQuestion + 1);
                 } else {
-                    setDisplaywrongquestion(true)
+                    setDisplaywrongquestion(true);
                 }
-            }, 500);
+            }, 2000);
         }
     };
 
-    const updateScore = () => {
-        if (clickedOption === data[currentQuestion].answer) {
+    const updateScore = (selectedOption) => {
+        if (selectedOption === data[currentQuestion].answer) {
             setScore(score + 1);
-        }
-        else {
-
-            // console.log(data[currentQuestion])
-            setWrongquestion([...wrongquestion, data[currentQuestion]])
-
+        } else {
+            setWrongquestion([...wrongquestion, data[currentQuestion]]);
         }
     };
-// const handelreset=()=>{
-//     setCurrentQuestion(0)
-//     setScore(0)
-//     setWrongquestion([])
- 
 
-// }
     return (
         <div>
-            {/* { currentQuestion<=data.length-1 && */}
-            <div className='text-center'>
+            <h1 className='text-3xl font-bold text-center mt-10'>USA Quiz</h1>
+            <br />
+            <div className='text-center shadow-[-10px_-10px_30px_4px_rgba(0,0,0,0.1),_10px_10px_30px_4px_rgba(45,78,255,0.15)] py-4 w-[60%] m-auto'>
                 <div className='text-center mt-10'>
-                    <h1 className='text-3xl font-bold' >USA Quiz</h1>
                     <br />
-                    <h1>Current Score:- {score}</h1>
+                    <h1>Current Score: {score}</h1>
                     <br />
                     <h1 className='font-bold text-xl'>Question {currentQuestion + 1} out of 5</h1>
                     <br />
-                    <h1 className='text-2xl font-bold'>{currentQuestion+1}) {data[currentQuestion].question}</h1>
+                    <h1 className='text-2xl font-bold'>{currentQuestion + 1}) {data[currentQuestion].question}</h1>
                 </div>
                 <br />
                 <div className='text-center'>
@@ -72,14 +62,12 @@ function Quiz() {
                             }
                         }
                         return (
-                         
                             <div key={index}>
                                 <button
-                                    className={`bg-slate-400 w-[20%] ${backgroundColor} `}
-                                    onClick={() => setClickedOption(index + 1)}
-                                  
+                                    className={`border-2 border-black  shadow-[-10px_-10px_30px_4px_rgba(0,0,0,0.1),_10px_10px_30px_4px_rgba(45,78,255,0.15)] w-[40%] hover:bg-orange-300 rounded-md py-1 ${backgroundColor}`}
+                                    onClick={() => handleQuestionChange(index)}
                                 >
-                                  <span className={`w-96 ${backgroundColor}`}>{index+1}) {option}</span>  
+                                    {option}
                                 </button>
                                 <br />
                                 <br />
@@ -87,48 +75,37 @@ function Quiz() {
                         );
                     })}
                 </div>
-                <button
-                    className='px-2 py-1 bg-blue-400 text-xl font-semibold rounded-md'
-                    onClick={handleQuestionChange}
-                >
-                    Next
-                </button>
-                {/* <button  className='px-2 py-1 bg-blue-400 text-xl font-semibold rounded-md ml-4' onClick={handelreset}>Reset</button> */}
             </div>
-            {/* } */}
-
-            {displaywrongquestion == true ?
-
-
-                wrongquestion.map((item,index) => {
-                    return (
-                        <>
-                            <div className='p-4'>
-                                <h1 className='text-2xl font-semibold '>List of questions with right answer</h1>
-                                <br />
-                                <h1 className='text-xl font-semibold'>{index+1}) {item.question}</h1>
-                                {/* <br /> */}
-                            </div>
-                            <div className='px-4'>
-                                {
-                                    item.options.map((opt, index) => {
-                                        return (
-                                            <>
-                                                <p style={{ backgroundColor: item.answer === index + 1 ? '#90EE90' : 'initial',width:"10%" }}>{index+1}) {opt}</p>
-
-                                            </>
-                                        )
-                                    })
-                                }
-                            </div>
-                        </>
-                    )
-                }) : ""
-
-
-            }
             <br />
-
+            <br />
+            <br />
+            {displaywrongquestion && (
+                <div className='py-28 w-[60%] m-auto items-center text-center shadow-[-10px_-10px_30px_4px_rgba(0,0,0,0.1),_10px_10px_30px_4px_rgba(45,78,255,0.15)]'>
+                    <h1 className='text-2xl font-semibold '>List of questions with right answer</h1>
+                    <br />
+                    {wrongquestion.map((item, index) => (
+                        <div key={index} className='p-4 m-auto r' >
+                            <h1 className='text-xl font-semibold'>{index + 1}) {item.question}</h1>
+                            <br />
+                            <div className='px-4 '>
+                                {item.options.map((opt, optIndex) => (
+                                    <p
+                                        key={optIndex}
+                                        style={{
+                                            backgroundColor: item.answer === optIndex + 1 ? '#90EE90' : 'initial',
+                                            
+                                        }}
+                                        className='w-[30%] m-auto'
+                                    >
+                                        {optIndex + 1}) {opt}
+                                    </p>
+                                ))}
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            )}
+            <br />
         </div>
     );
 }
